@@ -3,7 +3,6 @@ build/
 out/
 !gradle-wrapper.jar
 .idea/
-**/resources/natives
 natives/dist
 natives/fdk-aac/**
 !natives/fdk-aac/CMakeLists.txt
