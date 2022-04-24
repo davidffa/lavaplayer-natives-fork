@@ -259,6 +259,7 @@ def prepareBuilds(force) {
     buildOpusOnWindows(force)
   } else {
     def arch = System.getProperty("os.arch")
+    if (arch == 'amd64') arch = 'x86-64'
 
     prepareOggOnUnix(force)
     buildOpusOnUnix(force, arch)

@@ -2,6 +2,7 @@ import org.apache.tools.ant.taskdefs.condition.Os
 
 def getBuildParameters(base) {
   def arch = System.getProperty("os.arch")
+  if (arch == 'amd64') arch = 'x86-64'
 
   if (Os.isFamily(Os.FAMILY_WINDOWS)) {
     return [
