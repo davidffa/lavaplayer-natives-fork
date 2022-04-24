@@ -134,7 +134,7 @@ def getDevEnvLocation() {
     cmakeProcess.consumeProcessOutput(outStream, outStream)
     cmakeProcess.waitFor()
 
-    def matcher = Pattern.compile("working C compiler: ([^\\n]*) -- works").matcher(outStream)
+    def matcher = Pattern.compile("working C compiler: ([^\\n]*) - skipped").matcher(outStream)
     matcher.find()
 
     def baseDirectory = file(matcher.group(1))
