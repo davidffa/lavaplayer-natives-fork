@@ -180,12 +180,12 @@ def waitForAndCheckSuccess(process, name) {
   }
 }
 
-def buildOpusOnLinux(force) {
+def buildOpusOnUnix(force, arch) {
   def present = file("${projectDir}/libs/64/libopus.a").exists()
 
   if (force || !present) {
     def flags = "-fPIC -O3 -fdata-sections -ffunction-sections"
-    def process = ["./configure", "--enable-static", "--with-cpu=x86-64", "--with-pic", "CFLAGS=${flags}", "CXXFLAGS=${flags}", "LDFLAGS=${flags}"].
+    def process = ["./configure", "--enable-static", "--with-cpu=" + arch, "--with-pic", "CFLAGS=${flags}", "CXXFLAGS=${flags}", "LDFLAGS=${flags}"].
         execute(null as String[], file("$projectDir/opus/opus-${opusVersion}"))
 
     waitForAndCheckSuccess(process, "Opus ./configure")
@@ -218,14 +218,14 @@ def replaceAutotoolsVersion(directory, originalVersion) {
   }
 }
 
-def buildMpg123OnLinux(force) {
+def buildMpg123OnUnix(force, arch) {
   def present = file("${projectDir}/libs/64/libmpg123.a").exists()
 
   if (force || !present) {
     replaceAutotoolsVersion("$projectDir/mp3/mpg123-${mpg123Version}", '1.16.1')
 
     def flags = "-fPIC -O3 -fdata-sections -ffunction-sections"
-    def process = ['./configure', '--enable-static', '--with-cpu=x86-64', '--with-pic', "CFLAGS=$flags", "CXXFLAGS=$flags"].
+    def process = ['./configure', '--enable-static', '--with-cpu=' + arch, '--with-pic', "CFLAGS=$flags", "CXXFLAGS=$flags"].
         execute(null as String[], file("$projectDir/mp3/mpg123-${mpg123Version}"))
 
     waitForAndCheckSuccess(process, "Mpg123 ./configure")
@@ -243,7 +243,7 @@ def buildMpg123OnLinux(force) {
   }
 }
 
-def prepareOggOnLinux(force) {
+def prepareOggOnUnix(force) {
   def configured = file("$projectDir/vorbis/libogg-${oggVersion}/include/ogg/config_types.h").exists()
 
   if (force || !configured) {
@@ -258,9 +258,11 @@ def prepareBuilds(force) {
   if (Os.isFamily(Os.FAMILY_WINDOWS)) {
     buildOpusOnWindows(force)
   } else {
-    prepareOggOnLinux(force)
-    buildOpusOnLinux(force)
-    buildMpg123OnLinux(force)
+    def arch = System.getProperty("os.arch")
+
+    prepareOggOnUnix(force)
+    buildOpusOnUnix(force, arch)
+    buildMpg123OnUnix(force, arch)
   }
 }
 
