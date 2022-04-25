@@ -105,18 +105,37 @@ task load { doLast {
     }
   }
 
-  if (!Os.isFamily(Os.FAMILY_WINDOWS) && !file("$projectDir/mp3/mpg123-${mpg123Version}").exists()) {
-    def downloadPath = "$buildDir/tmp/temp.tar.bz2"
-    def unpackPath = "$buildDir"
+  if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+    if (!file("$projectDir/mp3/mpg123-$mpg123Version").exists()) {
+      def arch = System.getProperty("os.arch")
+      def bits = arch == "amd64" ? "64" : "32"
+      def suffix = arch == "amd64" ? "-64" : ""
+      def downloadPath = "$buildDir/tmp/temp.zip"
 
-    download {
-      src "https://www.mpg123.de/download/mpg123-${mpg123Version}.tar.bz2"
-      dest downloadPath
+      download {
+        src "https://www.mpg123.de/download/win${bits}/${mpg123Version}/mpg123-${mpg123Version}-x86${suffix}.zip"
+        dest downloadPath
+      }
+
+      copy {
+        from zipTree(file(downloadPath))
+        into "$projectDir/mp3"
+      }
     }
+  } else {
+    if (!file("$projectDir/mp3/mpg123-$mpg123Version").exists()) {
+      def downloadPath = "$buildDir/tmp/temp.tar.bz2"
+      def unpackPath = "$buildDir"
 
-    copy {
-      from tarTree(file(downloadPath))
-      into "$projectDir/mp3"
+      download {
+        src "https://www.mpg123.de/download/mpg123-${mpg123Version}.tar.bz2"
+        dest downloadPath
+      }
+
+      copy {
+        from tarTree(file(downloadPath))
+        into "$projectDir/mp3"
+      }
     }
   }
 }}
@@ -171,6 +190,20 @@ def buildOpusOnWindows(force) {
     libs.each {
       assert file("$projectDir/opus/opus-${opusVersion}/win32/VS2015/${platformName}/Release/${it}.lib").renameTo("${base}/${it}.lib")
     }
+  }
+}
+
+def prepareMpg123OnWindows(force, arch) {
+  def base = "$projectDir/libs/64"
+  def present = file("$projectDir/libs/64/mpg123.lib").exists()
+
+  if (force || !present) {
+    def process = ["lib", "/def:libmpg123-0.def", arch == "x86-64" ? "/machine:x64" : "", "/out:mpg123.lib"]
+            .execute(null as String[], file("$projectDir/mp3/mpg123-${mpg123Version}-${arch}"))
+
+    process.waitForProcessOutput(System.out as Appendable, System.err)
+
+    assert file("$projectDir/mp3/mpg123-${mpg123Version}-${arch}/mpg123.lib").renameTo("$base/mpg123.lib")
   }
 }
 
@@ -257,12 +290,13 @@ def prepareOggOnUnix(force) {
 }
 
 def prepareBuilds(force) {
+  def arch = System.getProperty("os.arch")
+  if (arch == 'amd64') arch = 'x86-64'
+
   if (Os.isFamily(Os.FAMILY_WINDOWS)) {
     buildOpusOnWindows(force)
+    prepareMpg123OnWindows(force, arch)
   } else {
-    def arch = System.getProperty("os.arch")
-    if (arch == 'amd64') arch = 'x86-64'
-
     prepareOggOnUnix(force)
     buildOpusOnUnix(force, arch)
     buildMpg123OnUnix(force, arch)
