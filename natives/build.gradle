@@ -57,6 +57,8 @@ task load { doLast {
       into unpackPath
     }
 
+    delete("$unpackPath/fdk-aac-$fdkAacVersion/CMakeLists.txt")
+
     copy {
       from "$unpackPath/fdk-aac-${fdkAacVersion}"
       into "$projectDir/fdk-aac"
