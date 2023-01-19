@@ -269,7 +269,7 @@ def buildMpg123OnUnix(force, arch) {
     waitForAndCheckSuccess(process, "make clean")
 
     process = ["make"].execute(null as String[], file("$projectDir/mp3/mpg123-${mpg123Version}"))
-    waitForAndCheckSuccess(process, "make")
+    waitForAndCheckSuccess(process, "make src/libmpg123/libmpg123.la")
 
     copy {
       from "$projectDir/mp3/mpg123-${mpg123Version}/src/libmpg123/.libs/libmpg123.a"
