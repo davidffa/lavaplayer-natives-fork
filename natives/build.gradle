@@ -219,6 +219,8 @@ def buildOpusOnUnix(force, arch) {
   def present = file("${projectDir}/libs/64/libopus.a").exists()
 
   if (force || !present) {
+    replaceAutotoolsVersion("$projectDir/opus/opus-$opusVersion", "1.15.1")
+
     def flags = "-fPIC -O3 -fdata-sections -ffunction-sections"
     def process = ["./configure", "--enable-static", "--with-cpu=" + arch, "--with-pic", "CFLAGS=${flags}", "CXXFLAGS=${flags}", "LDFLAGS=${flags}"].
         execute(null as String[], file("$projectDir/opus/opus-${opusVersion}"))
