@@ -106,10 +106,11 @@ task load { doLast {
   }
 
   if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-    if (!file("$projectDir/mp3/mpg123-$mpg123Version").exists()) {
-      def arch = System.getProperty("os.arch")
-      def bits = arch == "amd64" ? "64" : "32"
-      def suffix = arch == "amd64" ? "-64" : ""
+    def arch = System.getProperty("os.arch")
+    def bits = arch == "amd64" ? "64" : "32"
+    def suffix = arch == "amd64" ? "-64" : ""
+
+    if (!file("$projectDir/mp3/mpg123-$mpg123Version-x86${suffix}").exists()) {
       def downloadPath = "$buildDir/tmp/temp.zip"
 
       download {
