@@ -223,7 +223,7 @@ def buildOpusOnUnix(force, arch) {
     replaceAutotoolsVersion("$projectDir/opus/opus-$opusVersion", "1.16.1")
 
     def flags = "-fPIC -O3 -fdata-sections -ffunction-sections"
-    def process = ["./configure", "--enable-static", "--with-cpu=" + arch, "--with-pic", "CFLAGS=${flags}", "CXXFLAGS=${flags}", "LDFLAGS=${flags}"].
+    def process = ["./configure", "--enable-static", "--with-pic", "CFLAGS=${flags}", "CXXFLAGS=${flags}", "LDFLAGS=${flags}"].
         execute(null as String[], file("$projectDir/opus/opus-${opusVersion}"))
 
     waitForAndCheckSuccess(process, "Opus ./configure")
