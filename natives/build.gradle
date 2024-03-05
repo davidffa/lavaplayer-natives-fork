@@ -10,7 +10,7 @@ apply plugin: 'de.undercouch.download'
 
 apply from: 'natives.gradle'
 
-ext.opusVersion = '1.4'
+ext.opusVersion = '1.5.1'
 ext.mpg123Version = '1.32.5'
 ext.oggVersion = '1.3.5'
 ext.vorbisVersion = '1.3.7'
