@@ -173,23 +173,27 @@ def getDevEnvLocation() {
 
 def buildOpusOnWindows(force) {
   def base = "$projectDir/libs/64"
+  def buildDir = "$projectDir/opus/opus-$opusVersion/build"
   def libs = ['opus']
   def present = libs.every { file("${base}/${it}.lib").exists() }
 
   if (force || !present) {
     file(base).deleteDir()
     file(base).mkdirs()
+    file(buildDir).mkdirs()
 
-    def devenv = getDevEnvLocation()
-    def platformName = "x64"
+    def process = ["cmake", "..", "-DOPUS_BUILD_SHARED_LIBRARY=ON", "-DCMAKE_BUILD_TYPE=Release", "-A", "x64"]
+      .execute(null as String[], file(buildDir))
 
-    def process = [devenv, "opus.sln", "/Project", "opus", "/Build", "Release|${platformName}"].
-        execute(null as String[], file("$projectDir/opus/opus-${opusVersion}/win32/VS2015"))
+    waitForAndCheckSuccess(process, "Opus cmake config")
 
-    process.waitForProcessOutput(System.out as Appendable, System.err)
+    process = ["cmake", "--build", ".", "--config", "Release"]
+      .execute(null as String[], file(buildDir))
+
+    waitForAndCheckSuccess(process, "Opus cmake build")
 
     libs.each {
-      assert file("$projectDir/opus/opus-${opusVersion}/win32/VS2015/${platformName}/Release/${it}.lib").renameTo("${base}/${it}.lib")
+      assert file("$buildDir/Release/${it}.lib").renameTo("${base}/${it}.lib")
     }
   }
 }
