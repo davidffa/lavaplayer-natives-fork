@@ -4,8 +4,6 @@ plugins {
 
 import org.apache.tools.ant.taskdefs.condition.Os
 
-import java.util.regex.Pattern
-
 apply plugin: 'de.undercouch.download'
 
 apply from: 'natives.gradle'
@@ -141,36 +139,6 @@ task load { doLast {
   }
 }}
 
-ext.devEnvPath = null
-
-def getDevEnvLocation() {
-  if (ext.devEnvPath == null) {
-    def testDirectory = file("$buildDir/tmp/vsloc")
-    testDirectory.deleteDir()
-    testDirectory.mkdirs()
-
-    new File(testDirectory, "CMakeLists.txt") << ""
-
-    def outStream = new StringBuilder()
-    def cmakeProcess = "cmake .".execute(null as String[], testDirectory)
-    cmakeProcess.consumeProcessOutput(outStream, outStream)
-    cmakeProcess.waitFor()
-
-    def matcher = Pattern.compile("working C compiler: ([^\\n]*) - skipped").matcher(outStream)
-    matcher.find()
-
-    def baseDirectory = file(matcher.group(1))
-
-    while (!new File(baseDirectory, 'Common7').directory && baseDirectory.parentFile?.directory) {
-      baseDirectory = baseDirectory.parentFile
-    }
-
-    ext.devEnvPath = new File(baseDirectory, "Common7/IDE/devenv.exe").absolutePath
-  }
-
-  return ext.devEnvPath
-}
-
 def buildOpusOnWindows(force) {
   def base = "$projectDir/libs/64"
   def buildDir = "$projectDir/opus/opus-$opusVersion/build"
@@ -182,7 +150,7 @@ def buildOpusOnWindows(force) {
     file(base).mkdirs()
     file(buildDir).mkdirs()
 
-    def process = ["cmake", "..", "-DOPUS_BUILD_SHARED_LIBRARY=ON", "-DCMAKE_BUILD_TYPE=Release", "-A", "x64"]
+    def process = ["cmake", "..", "-DCMAKE_BUILD_TYPE=Release", "-A", "x64"]
       .execute(null as String[], file(buildDir))
 
     waitForAndCheckSuccess(process, "Opus cmake config")
@@ -203,6 +171,8 @@ def prepareMpg123OnWindows(force, arch) {
   def present = file("$projectDir/libs/64/mpg123.lib").exists()
 
   if (force || !present) {
+    file(base).mkdirs()
+
     def process = ["lib", "/def:libmpg123-0.def", arch == "x86-64" ? "/machine:x64" : "", "/out:mpg123.lib"]
             .execute(null as String[], file("$projectDir/mp3/mpg123-${mpg123Version}-${arch}"))
 
