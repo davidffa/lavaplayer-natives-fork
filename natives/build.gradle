@@ -8,8 +8,8 @@ apply plugin: 'de.undercouch.download'
 
 apply from: 'natives.gradle'
 
-ext.opusVersion = '1.5.1'
-ext.mpg123Version = '1.32.5'
+ext.opusVersion = '1.5.2'
+ext.mpg123Version = '1.32.6'
 ext.oggVersion = '1.3.5'
 ext.vorbisVersion = '1.3.7'
 ext.sampleRateVersion = '0.2.2'
@@ -194,7 +194,7 @@ def buildOpusOnUnix(force, arch) {
   def present = file("${projectDir}/libs/64/libopus.a").exists()
 
   if (force || !present) {
-    replaceAutotoolsVersion("$projectDir/opus/opus-$opusVersion", "1.16.1")
+    replaceAutotoolsVersion("$projectDir/opus/opus-$opusVersion", "1.16.5")
 
     def flags = "-fPIC -O3 -fdata-sections -ffunction-sections"
     def process = ["./configure", "--enable-static", "--with-pic", "CFLAGS=${flags}", "CXXFLAGS=${flags}", "LDFLAGS=${flags}"].
@@ -234,7 +234,7 @@ def buildMpg123OnUnix(force, arch) {
   def present = file("${projectDir}/libs/64/libmpg123.a").exists()
 
   if (force || !present) {
-    replaceAutotoolsVersion("$projectDir/mp3/mpg123-${mpg123Version}", '1.16.1')
+    replaceAutotoolsVersion("$projectDir/mp3/mpg123-${mpg123Version}", '1.16.5')
 
     def flags = "-fPIC -O3 -fdata-sections -ffunction-sections"
     def process = ['./configure', '--enable-static', '--with-cpu=' + arch, '--with-pic', "CFLAGS=$flags", "CXXFLAGS=$flags"].
