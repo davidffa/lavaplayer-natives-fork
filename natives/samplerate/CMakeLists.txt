@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.5)
 project(samplerate C)
 
 if(NOT ${CMAKE_C_COMPILER_ID} STREQUAL "MSVC")

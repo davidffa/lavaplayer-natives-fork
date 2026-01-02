@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.5)
 project(connector C)
 
 if(${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
