@@ -20,7 +20,7 @@ task load { doLast {
     def downloadPath = "$buildDir/tmp/libsamplerate.tar.gz"
     def unpackPath = "$buildDir/tmp"
 
-    download {
+    download.run {
       src "https://github.com/libsndfile/libsamplerate/archive/refs/tags/${sampleRateVersion}.tar.gz"
       dest downloadPath
     }
@@ -45,7 +45,7 @@ task load { doLast {
     def downloadPath = "$buildDir/tmp/fdk-aac-v${fdkAacVersion}.zip"
     def unpackPath = "$buildDir"
 
-    download {
+    download.run {
       src "https://github.com/mstorsjo/fdk-aac/archive/v${fdkAacVersion}.zip"
       dest downloadPath
     }
@@ -67,7 +67,7 @@ task load { doLast {
     def downloadPath = "$buildDir/tmp/temp.zip"
     def unpackPath = "$buildDir"
 
-    download {
+    download.run {
       src "http://downloads.xiph.org/releases/ogg/libogg-${oggVersion}.zip"
       dest downloadPath
     }
@@ -77,7 +77,7 @@ task load { doLast {
       into "$projectDir/vorbis"
     }
 
-    download {
+    download.run {
       src "http://downloads.xiph.org/releases/vorbis/libvorbis-${vorbisVersion}.zip"
       dest downloadPath
     }
@@ -92,7 +92,7 @@ task load { doLast {
     def downloadPath = "$buildDir/tmp/temp.tar.gz"
     def unpackPath = "$buildDir"
 
-    download {
+    download.run {
       src "http://downloads.xiph.org/releases/opus/opus-${opusVersion}.tar.gz"
       dest downloadPath
     }
@@ -111,7 +111,7 @@ task load { doLast {
     if (!file("$projectDir/mp3/mpg123-$mpg123Version-x86${suffix}").exists()) {
       def downloadPath = "$buildDir/tmp/temp.zip"
 
-      download {
+      download.run {
         src "https://www.mpg123.de/download/win${bits}/${mpg123Version}/mpg123-${mpg123Version}-x86${suffix}.zip"
         dest downloadPath
       }
@@ -126,7 +126,7 @@ task load { doLast {
       def downloadPath = "$buildDir/tmp/temp.tar.bz2"
       def unpackPath = "$buildDir"
 
-      download {
+      download.run {
         src "https://www.mpg123.de/download/mpg123-${mpg123Version}.tar.bz2"
         dest downloadPath
       }
