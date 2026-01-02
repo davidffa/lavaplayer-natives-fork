@@ -8,9 +8,9 @@ apply plugin: 'de.undercouch.download'
 
 apply from: 'natives.gradle'
 
-ext.opusVersion = '1.5.2'
-ext.mpg123Version = '1.32.6'
-ext.oggVersion = '1.3.5'
+ext.opusVersion = '1.6'
+ext.mpg123Version = '1.33.4'
+ext.oggVersion = '1.3.6'
 ext.vorbisVersion = '1.3.7'
 ext.sampleRateVersion = '0.2.2'
 ext.fdkAacVersion = '2.0.3'

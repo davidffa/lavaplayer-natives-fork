@@ -39,11 +39,11 @@ include_directories("$ENV{JAVA_HOME}/include/")
 
 include_directories("${samplerate_SOURCE_DIR}/src")
 include_directories("${samplerate_SOURCE_DIR}/include")
-include_directories("../opus/opus-1.5.2/include")
+include_directories("../opus/opus-1.6/include")
 include_directories("../fdk-aac/libAACdec/include")
 include_directories("../fdk-aac/libSYS/include")
 include_directories("../vorbis/libvorbis-1.3.7/include")
-include_directories("../vorbis/libogg-1.3.5/include")
+include_directories("../vorbis/libogg-1.3.6/include")
 link_directories("../libs/64")
 
 if (DEFINED ENV{DIST_DIR})
